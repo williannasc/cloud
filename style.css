@@ -1,0 +1,236 @@
+/* Estilo Geral - Tema Escuro Moderno */
+:root {
+    --bg: #0b0f1a;
+    --sidebar: #111827;
+    --card: #1e293b;
+    --accent: #38bdf8;
+    --sidebar-w: 260px;
+}
+
+body {
+    background: var(--bg);
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    /* Evita scroll lateral no mobile */
+}
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR: Esconde no mobile por padrão */
+.sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar);
+    border-right: 1px solid #1f2937;
+    padding: 2rem 1.5rem;
+    position: fixed;
+    height: 100vh;
+
+    transition: transform 0.3s ease;
+    z-index: 1050 !important;
+}
+
+/* CONTEÚDO: Ajusta a margem dinamicamente */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-w);
+    padding: 2.5rem 3.5rem;
+    width: 100%;
+    transition: margin-left 0.3s ease;
+    padding-top: 1.5rem !important;
+}
+
+/* CARDS */
+.folder-card,
+.file-card-v2 {
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 12px;
+    border: 1px solid #334155;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.folder-card {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.file-card-v2 {
+    padding: 2.2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.folder-card:hover,
+.file-card-v2:hover {
+    background: rgba(51, 65, 85, 0.6);
+    border-color: var(--accent);
+    transform: translateY(-4px);
+}
+
+.item-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+}
+
+.folder-card:hover .item-actions,
+.file-card-v2:hover .item-actions {
+    opacity: 1 !important;
+}
+
+
+
+.btn-action-tool {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.6);
+    transition: 0.2s;
+}
+
+.btn-edit-tool:hover {
+    background: #f59e0b;
+}
+
+.btn-del-tool:hover {
+    background: #ef4444;
+}
+
+.btn-down-tool:hover {
+    background: var(--accent);
+    color: #000;
+}
+
+.section-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #475569;
+    margin: 2rem 0 1rem;
+    font-weight: 800;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+}
+
+.breadcrumb-item a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+#previewContainer img {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+}
+
+#previewContainer iframe {
+    width: 100%;
+    height: 70vh;
+    border-radius: 8px;
+    border: none;
+    background: white;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;    
+    padding: 1.5rem 3.5rem;
+}
+
+footer hr {
+    border-top: 1px solid var(--accent);
+    opacity: 0.1 !important;
+}
+
+footer .badge {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* MEDIA QUERY: Mágica para Mobile */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        /* Esconde a sidebar para a esquerda */
+    }
+
+    .main-content {
+        margin-left: 0;
+        /* Remove a margem lateral */
+        padding: 1.5rem;
+        /* Diminui o padding para ganhar espaço */
+        width: 100vw !important;
+        /* Garante que ocupe toda a largura da tela */
+    }
+
+    .main-content .col-6 {
+        width: 50% !important;
+    }
+
+    .section-title {
+        margin: 1.5rem 0 1rem;
+    }
+
+    /* No mobile, as ações ficam sempre visíveis para facilitar o toque */
+    .item-actions {
+        opacity: 1;
+    }
+
+    /* Ajuste do Modal de Preview para ocupar a tela toda */
+    .modal-lg {
+        max-width: 95%;
+        margin: 10px auto;
+    }
+
+    .btn-menu-mobile {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #000;
+        border: none;
+        z-index: 2000;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        font-size: 20px;
+    }
+
+    /* Essa classe será adicionada pelo JS */
+    .sidebar.active {
+        transform: translateX(0) !important;
+    }
+
+    footer {
+        padding-bottom: 80px !important;
+        /* Espaço para o botão flutuante */
+    }
+
+}
