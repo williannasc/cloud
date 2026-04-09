@@ -234,3 +234,30 @@ footer .badge {
     }
 
 }
+
+
+/* Melhora o Grid para ser mais fluido */
+.row-cols-lg-6 > * {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+}
+
+/* Ajuste nos cards para não ficarem gigantes em telas menores */
+.file-card-v2 {
+    padding: 1.5rem 0.8rem; /* Reduzido para caber mais itens na linha */
+    min-height: 160px;
+}
+
+.file-card-v2 i {
+    font-size: 2.5rem !important; /* Ícones um pouco menores para harmonia */
+}
+
+/* Efeito de Empty State */
+.opacity-25 {
+    opacity: 0.25 !important;
+    transition: opacity 0.3s;
+}
+
+.opacity-25:hover {
+    opacity: 0.5 !important;
+}

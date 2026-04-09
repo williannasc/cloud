@@ -59,10 +59,11 @@ function getIcone($item)
 
 <head>
     <meta charset="UTF-8">
-    <title>PrivatCloud Pro</title>
+    <title>PrivatCloud</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <link href="style.css" rel="stylesheet">
 </head>
 
@@ -128,6 +129,12 @@ function getIcone($item)
                 <?php endif; ?>
 
                 <p class="section-title">Arquivos</p>
+                <?php if (empty($arquivos)): ?>
+                <div class="text-center py-5 opacity-25">
+                    <i class="fa-solid fa-file-circle-xmark fa-4x mb-3"></i>
+                    <p>Nenhum arquivo encontrado nesta pasta.</p>
+                </div>
+                <?php else: ?>
                 <div class="row g-4">
                     <?php foreach ($arquivos as $a): $estilo = getIcone($a); ?>
                         <div class="col-6 col-md-3 col-lg-2">
@@ -146,6 +153,7 @@ function getIcone($item)
                         </div>
                     <?php endforeach; ?>
                 </div>
+                <?php endif; ?>
             </main>
         </div>
 

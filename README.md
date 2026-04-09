@@ -11,7 +11,7 @@ Descrição breve do sistema e suas funcionalidades.
 
 ## Introdução
 
-Um simples sistema de upload e download de arquivos com controle de acesso, estilo nuvem privada.
+Um simples sistema de upload e download de arquivos com controle de acesso, feito em PHP e Bootstrap, com banco de dados MySQL, estilo nuvem privada.
 
 
 ## Funcionalidades
@@ -29,4 +29,3 @@ Um simples sistema de upload e download de arquivos com controle de acesso, esti
 
 ## Licença
 
-Informações sobre a licença do projeto.
