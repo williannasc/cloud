@@ -1,0 +1,1278 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --font-title: 'Google Sans', 'Inter', sans-serif;
+  --font-body: 'Roboto', 'Inter', sans-serif;
+  
+  --bg-primary: #131314;       /* Fundo principal do Drive */
+  --bg-secondary: #1e1f20;     /* Fundo do sidebar, header, painel lateral */
+  --bg-tertiary: #2a2b2d;      /* Fundo de cards, inputs, hovers */
+  --bg-hover: #333537;         /* Cor ao passar o mouse */
+  --bg-active: #004a77;        /* Cor ativa azul escuro */
+  
+  --primary: #a8c7fa;          /* Azul do Google Drive */
+  --primary-hover: #c2e7ff;    /* Azul claro hover */
+  --primary-text: #e3e3e3;     /* Texto principal */
+  --secondary-text: #c4c7c5;   /* Texto secundário */
+  --muted-text: #8e918f;       /* Texto apagado */
+  
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-focus: #a8c7fa;
+  
+  --folder-color: #f7c325;     /* Amarelo padrão do Google Drive */
+  --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-body);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--primary-text);
+  min-height: 100vh;
+  overflow: hidden; /* O painel de navegação interna fará o scroll */
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Main Layout Structure */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sidebar (Google Drive style) */
+.sidebar {
+  width: 256px;
+  background-color: transparent;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  flex-shrink: 0;
+  z-index: 100;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-title);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--primary-text);
+  padding: 0.5rem 0.75rem 1.5rem 0.75rem;
+}
+
+.sidebar-logo img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Google Drive "+ Novo" button */
+.new-btn-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #37393b;
+  color: var(--primary-text);
+  border: none;
+  padding: 18px 24px;
+  border-radius: 16px;
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 8px 3px rgba(0,0,0,0.15);
+  transition: var(--transition-smooth);
+}
+
+.new-btn:hover {
+  background: #47494a;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 12px 6px rgba(0,0,0,0.15);
+}
+
+.new-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  width: 200px;
+  z-index: 200;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.new-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--primary-text);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transition-smooth);
+}
+
+.new-dropdown-item:hover {
+  background: var(--bg-hover);
+}
+
+/* Sidebar Navigation Items */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 24px;
+  border-radius: 50px;
+  color: var(--secondary-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  height: 40px;
+  transition: var(--transition-smooth);
+}
+
+.nav-item:hover {
+  background-color: var(--bg-hover);
+  color: var(--primary-text);
+}
+
+.nav-item.active {
+  background-color: var(--bg-active);
+  color: #c2e7ff;
+}
+
+.nav-item.logout {
+  margin-top: auto;
+  color: var(--muted-text);
+}
+
+.nav-item.logout:hover {
+  color: #ffb4ab;
+  background: rgba(255, 180, 171, 0.08);
+}
+
+/* Storage space meter */
+.storage-meter {
+  padding: 16px 12px 0 12px;
+  border-top: 1px solid var(--border-color);
+  margin-top: 1rem;
+}
+
+.storage-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  margin-bottom: 8px;
+}
+
+.storage-bar-bg {
+  width: 100%;
+  height: 4px;
+  background: #474747;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.storage-bar-fill {
+  height: 100%;
+  background: #a8c7fa;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.storage-text {
+  font-size: 0.75rem;
+  color: var(--muted-text);
+}
+
+/* Main Dashboard Panel */
+.main-dashboard {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
+  overflow: hidden;
+  background-color: var(--bg-secondary);
+  border-radius: 24px;
+  margin: 16px 16px 16px 0;
+  border: none;
+  box-shadow: none;
+}
+
+/* Header (Search & Actions) */
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  height: 64px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: transparent;
+  flex-shrink: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-tertiary);
+  border-radius: 30px;
+  width: 100%;
+  max-width: 720px;
+  height: 48px;
+  padding: 0 16px;
+  transition: var(--transition-smooth);
+}
+
+.search-container:focus-within {
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+}
+
+.search-container:focus-within .search-input {
+  color: #000;
+}
+
+.search-container:focus-within .search-icon {
+  color: #474747;
+}
+
+.search-icon {
+  color: var(--muted-text);
+  margin-right: 12px;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  color: var(--primary-text);
+  font-size: 0.95rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-text);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--primary-text);
+}
+
+.icon-btn.active {
+  color: var(--primary);
+  background-color: rgba(168, 199, 250, 0.15);
+}
+
+/* Secondary header for path breadcrumbs */
+.subheader-bar {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: transparent;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+}
+
+.breadcrumb-item {
+  color: var(--secondary-text);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: var(--transition-smooth);
+}
+
+.breadcrumb-item:hover {
+  background: var(--bg-hover);
+  color: var(--primary-text);
+}
+
+.breadcrumb-item.current {
+  color: var(--primary-text);
+  font-weight: 500;
+  cursor: default;
+}
+
+.breadcrumb-item.current:hover {
+  background: transparent;
+}
+
+.breadcrumb-separator {
+  color: var(--muted-text);
+}
+
+/* Inner Scrollable Panel */
+.dashboard-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 24px;
+  position: relative;
+}
+
+/* Section Divider Titles */
+.section-title {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--secondary-text);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+.section-title:first-of-type {
+  margin-top: 0;
+}
+
+/* Folders Container (Grid View) */
+.folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 2rem;
+}
+
+/* Folder Card Chip (Google Drive style) */
+.folder-chip {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.folder-chip:hover, .folder-chip.selected {
+  background-color: var(--bg-hover);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.folder-chip.selected {
+  background-color: rgba(168, 199, 250, 0.08);
+  border-color: var(--primary);
+}
+
+.folder-icon {
+  color: var(--folder-color);
+  flex-shrink: 0;
+}
+
+.folder-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-grow: 1;
+  padding-right: 18px; /* space for three-dots */
+}
+
+/* Files Container (Grid View) */
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+/* File Card Box (Google Drive style) */
+.file-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.file-card:hover, .file-card.selected {
+  background-color: var(--bg-hover);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.file-card.selected {
+  background-color: rgba(168, 199, 250, 0.08);
+  border-color: var(--primary);
+}
+
+.file-preview-area {
+  height: 120px;
+  background-color: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.file-card-details {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-info-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-grow: 1;
+  padding-right: 16px;
+}
+
+.file-title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--primary-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-meta-sub {
+  font-size: 0.75rem;
+  color: var(--muted-text);
+  margin-top: 2px;
+}
+
+/* Three-dot Trigger Button */
+.three-dots-btn {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--secondary-text);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  opacity: 0;
+  z-index: 10;
+}
+
+.folder-chip:hover .three-dots-btn,
+.file-card:hover .three-dots-btn,
+.folder-chip.selected .three-dots-btn,
+.file-card.selected .three-dots-btn {
+  opacity: 1;
+}
+
+.three-dots-btn:hover {
+  background-color: rgba(255,255,255,0.1);
+  color: var(--primary-text);
+}
+
+/* Google Drive style list/table layout */
+.list-view-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.list-view-table th {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--secondary-text);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: var(--font-title);
+}
+
+.list-view-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  color: var(--primary-text);
+}
+
+.list-row {
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.list-row:hover {
+  background-color: var(--bg-hover);
+}
+
+.list-row.selected {
+  background-color: rgba(168, 199, 250, 0.08);
+}
+
+.list-item-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 320px;
+}
+
+.list-item-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-three-dots-container {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.list-row:hover .three-dots-btn, .list-row.selected .three-dots-btn {
+  opacity: 1;
+}
+
+.list-row .three-dots-btn {
+  position: relative;
+  right: 0;
+}
+
+/* Context/Dropdown Menu for actions */
+.context-menu-container {
+  position: relative;
+}
+
+.context-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 300;
+  width: 180px;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.context-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: var(--primary-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.context-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.context-item.delete:hover {
+  color: #ffb4ab;
+  background-color: rgba(255, 180, 171, 0.08);
+}
+
+/* Right side info panel */
+.details-panel {
+  width: 280px;
+  background-color: rgba(255, 255, 255, 0.01);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-shrink: 0;
+  transition: var(--transition-smooth);
+  animation: slideInRight 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+.details-header {
+  height: 64px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.details-title {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.details-body {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.details-preview-card {
+  width: 100%;
+  height: 140px;
+  background-color: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.details-preview-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.details-meta-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.details-meta-row th {
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--muted-text);
+  padding: 6px 0;
+  font-weight: 500;
+  width: 80px;
+  vertical-align: top;
+}
+
+.details-meta-row td {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--primary-text);
+  padding: 6px 0;
+  word-break: break-all;
+}
+
+/* Drag and Drop dropzone overlay */
+.drag-drop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(19, 19, 20, 0.85);
+  border: 2px dashed var(--primary);
+  margin: 16px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  color: var(--primary);
+  animation: fadeIn 0.2s ease-out;
+  pointer-events: none; /* Let drag events fall through so overlay is simple */
+}
+
+.drag-drop-title {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* CSS Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--secondary-text);
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: var(--primary-text);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.input-container {
+  margin-bottom: 1.25rem;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--primary-text);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+}
+
+/* Buttons in Google Material 3 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border: none;
+}
+
+.btn-primary {
+  background: #a8c7fa;
+  color: #0b0f1a;
+}
+
+.btn-primary:hover {
+  background: #c2e7ff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #a8c7fa;
+  border: 1px solid #74777f;
+}
+
+.btn-outline:hover {
+  background: rgba(168, 199, 250, 0.08);
+}
+
+.btn-danger {
+  background: #ffb4ab;
+  color: #601410;
+}
+
+.btn-danger:hover {
+  background: #ffdad6;
+}
+
+.login-alert {
+  background: rgba(255, 180, 171, 0.1);
+  border: 1px solid rgba(255, 180, 171, 0.2);
+  color: #ffb4ab;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Mobile Responsiveness */
+.mobile-header {
+  display: none;
+  height: 56px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: var(--bg-primary);
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .mobile-header {
+    display: flex;
+  }
+  
+  .main-dashboard {
+    border-radius: 0;
+    margin: 0;
+    border: none;
+    height: 100vh;
+  }
+  
+  .details-panel {
+    display: none;
+  }
+}
+
+/* Floating Bottom-Right Upload Status Widget */
+.upload-status-widget {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 360px;
+  background-color: #28292a;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+  animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background-color: #1e1f20;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.upload-status-title {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary-text);
+}
+
+.upload-status-body {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.upload-status-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.upload-status-item:last-child {
+  border-bottom: none;
+}
+
+.upload-item-name {
+  font-size: 0.85rem;
+  color: var(--primary-text);
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-item-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-progress-circle {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.upload-success-icon {
+  color: var(--success);
+}
+
+.upload-error-icon {
+  color: var(--danger);
+}
+
+/* File Card Image Thumbnail fit */
+.file-preview-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Floating Preview Modal size and image sizing constraint */
+.preview-modal {
+  max-width: 800px;
+  width: 90%;
+}
+
+.preview-body-container {
+  background-color: #0b0f1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  max-height: calc(85vh - 120px);
+  overflow: hidden;
+  position: relative;
+}
+
+.preview-body-container img {
+  max-width: 100%;
+  max-height: calc(85vh - 120px);
+  object-fit: contain;
+  display: block;
+}
+
+.preview-body-container iframe {
+  width: 100%;
+  height: calc(85vh - 120px);
+  min-height: 480px;
+  border: none;
+}
+
+/* Drag and Drop folder highlight indicators */
+.folder-chip.drag-over, tr.list-row.drag-over {
+  background-color: rgba(168, 199, 250, 0.15) !important;
+  border: 2px dashed var(--primary) !important;
+}
+
+/* Google Drive Immersive Preview Overlay */
+.gdrive-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(11, 11, 12, 0.98);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  user-select: none;
+}
+
+/* Header bar styling */
+.gdrive-preview-header {
+  height: 64px;
+  background-color: rgba(30, 31, 32, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2010;
+}
+
+.gdrive-preview-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 60%;
+}
+
+.gdrive-preview-btn-back {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+.gdrive-preview-btn-back:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.gdrive-preview-filename {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gdrive-preview-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gdrive-preview-btn-icon {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.gdrive-preview-btn-icon:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.gdrive-preview-btn-icon.close-btn:hover {
+  background-color: rgba(234, 67, 53, 0.3);
+  color: #ffb4ab;
+}
+
+/* Main preview content container */
+.gdrive-preview-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Arrow styling */
+.gdrive-preview-arrow {
+  background-color: rgba(30, 31, 32, 0.6);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, transform 0.1s;
+  z-index: 2020;
+}
+.gdrive-preview-arrow:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+.gdrive-preview-arrow:active {
+  transform: scale(0.95);
+}
+
+/* Inner content area */
+.gdrive-preview-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  max-width: calc(100% - 160px);
+  position: relative;
+}
+
+.gdrive-preview-image {
+  max-width: 100%;
+  max-height: calc(100vh - 120px);
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.gdrive-preview-iframe {
+  width: 100%;
+  height: calc(100vh - 100px);
+  border: none;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.gdrive-preview-fallback {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.gdrive-preview-fallback-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.gdrive-preview-fallback-text {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .gdrive-preview-container {
+    padding: 0 16px;
+  }
+  .gdrive-preview-arrow {
+    width: 44px;
+    height: 44px;
+  }
+  .gdrive-preview-content {
+    max-width: calc(100% - 100px);
+  }
+}
+
+/* Dashboard inner body wrapper to prevent overflow/clipping of parent containers */
+.dashboard-body-wrapper {
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
