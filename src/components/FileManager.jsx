@@ -69,7 +69,28 @@ export default function FileManager({
   // Layout Preference
   const [viewMode, setViewMode] = useState(() => localStorage.getItem('viewMode') || 'grid');
   const [infoPanelOpen, setInfoPanelOpen] = useState(() => localStorage.getItem('infoPanelOpen') === 'true');
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
+  // Computed: last selected item for the details panel
+  const selectedItem = selectedItems.length > 0 ? selectedItems[selectedItems.length - 1] : null;
+
+  // Multi-select handler: Ctrl/Cmd+Click toggles, normal click replaces
+  const handleSelectItem = (item, e) => {
+    if (e && (e.ctrlKey || e.metaKey)) {
+      setSelectedItems(prev => {
+        const exists = prev.find(i => i.id === item.id && i.tipo === item.tipo);
+        if (exists) {
+          return prev.filter(i => !(i.id === item.id && i.tipo === item.tipo));
+        }
+        return [...prev, item];
+      });
+    } else {
+      setSelectedItems([item]);
+    }
+  };
+
+  const isItemSelected = (item) => {
+    return selectedItems.some(i => i.id === item.id && i.tipo === item.tipo);
+  };
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -138,7 +159,7 @@ export default function FileManager({
       setData(res);
       setStorageUsed(res.tamanho_total_usado || 0);
       setStorageUsedFormat(res.tamanho_total_usado_formatado || '0 bytes');
-      setSelectedItem(null);
+      setSelectedItems([]);
     } else {
       alert(res.message || 'Erro ao carregar arquivos.');
     }
@@ -277,7 +298,10 @@ export default function FileManager({
   const handleContextMenu = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    setSelectedItem(item);
+    const isAlreadySelected = selectedItems.some(i => i.id === item.id && i.tipo === item.tipo);
+    if (!isAlreadySelected) {
+      setSelectedItems([item]);
+    }
     setContextMenu({
       x: e.clientX,
       y: e.clientY,
@@ -289,7 +313,10 @@ export default function FileManager({
   const handleThreeDotsClick = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
-    setSelectedItem(item);
+    const isAlreadySelected = selectedItems.some(i => i.id === item.id && i.tipo === item.tipo);
+    if (!isAlreadySelected) {
+      setSelectedItems([item]);
+    }
     
     const rect = e.currentTarget.getBoundingClientRect();
     setContextMenu({
@@ -300,10 +327,11 @@ export default function FileManager({
     });
   };
 
-  const handleMoveSubmit = async (itemId, destinoId) => {
+  const handleMoveSubmit = async (itemIds, destinoId) => {
     setIsMoveOpen(false);
+    setSelectedItems([]);
     setLoading(true);
-    const res = await api.post('mover.php', { id: itemId, destino_id: destinoId });
+    const res = await api.post('mover.php', { ids: itemIds, destino_id: destinoId });
     if (res.unauthorized) {
       onSessionExpired();
       return;
@@ -619,8 +647,8 @@ export default function FileManager({
                         <FolderCard
                           folder={folder}
                           onClick={setActiveDirId}
-                          isSelected={selectedItem?.id === folder.id && selectedItem?.tipo === 'pasta'}
-                          onSelect={setSelectedItem}
+                          isSelected={isItemSelected(folder)}
+                          onSelect={handleSelectItem}
                           onThreeDotsClick={(e) => handleThreeDotsClick(e, folder)}
                           onFolderDrop={handleFolderDrop}
                         />
@@ -643,8 +671,8 @@ export default function FileManager({
                         <FileCard
                           file={file}
                           onPreview={openPreviewModal}
-                          isSelected={selectedItem?.id === file.id && selectedItem?.tipo === 'arquivo'}
-                          onSelect={setSelectedItem}
+                          isSelected={isItemSelected(file)}
+                          onSelect={handleSelectItem}
                           onThreeDotsClick={(e) => handleThreeDotsClick(e, file)}
                         />
                       </div>
@@ -671,8 +699,8 @@ export default function FileManager({
                   {filteredPastas.map((folder) => (
                     <tr 
                       key={folder.id} 
-                      className={`list-row ${selectedItem?.id === folder.id && selectedItem?.tipo === 'pasta' ? 'selected' : ''}`}
-                      onClick={() => setSelectedItem(folder)}
+                      className={`list-row ${isItemSelected(folder) ? 'selected' : ''}`}
+                      onClick={(e) => handleSelectItem(folder, e)}
                       onDoubleClick={() => setActiveDirId(folder.id)}
                       onContextMenu={(e) => handleContextMenu(e, folder)}
                       draggable
@@ -707,8 +735,8 @@ export default function FileManager({
                   {filteredArquivos.map((file) => (
                     <tr 
                       key={file.id} 
-                      className={`list-row ${selectedItem?.id === file.id && selectedItem?.tipo === 'arquivo' ? 'selected' : ''}`}
-                      onClick={() => setSelectedItem(file)}
+                      className={`list-row ${isItemSelected(file) ? 'selected' : ''}`}
+                      onClick={(e) => handleSelectItem(file, e)}
                       onDoubleClick={() => openPreviewModal(file)}
                       onContextMenu={(e) => handleContextMenu(e, file)}
                       draggable
@@ -878,9 +906,18 @@ export default function FileManager({
             <Edit size={14} className="text-secondary" />
             <span>Renomear</span>
           </div>
-          <div className="context-item" onClick={(e) => { e.stopPropagation(); setContextMenu(prev => ({ ...prev, visible: false })); setMoveItem(contextMenu.item); setIsMoveOpen(true); }}>
+          <div className="context-item" onClick={(e) => { 
+            e.stopPropagation(); 
+            setContextMenu(prev => ({ ...prev, visible: false })); 
+            // Se o item clicado faz parte da seleção múltipla, mover todos os selecionados
+            const clickedItem = contextMenu.item;
+            const isInSelection = selectedItems.some(i => i.id === clickedItem.id && i.tipo === clickedItem.tipo);
+            const itemsToMove = isInSelection && selectedItems.length > 1 ? selectedItems : [clickedItem];
+            setMoveItem(itemsToMove);
+            setIsMoveOpen(true); 
+          }}>
             <FolderOpen size={14} className="text-secondary" />
-            <span>Mover</span>
+            <span>{selectedItems.length > 1 && selectedItems.some(i => i.id === contextMenu.item.id && i.tipo === contextMenu.item.tipo) ? `Mover ${selectedItems.length} itens` : 'Mover'}</span>
           </div>
           <div className="context-item" onClick={(e) => handleRowShare(e, contextMenu.item)}>
             {copiedRowId === contextMenu.item.id ? (
@@ -969,7 +1006,7 @@ export default function FileManager({
       <ModalMove
         isOpen={isMoveOpen}
         onClose={() => setIsMoveOpen(false)}
-        item={moveItem}
+        items={Array.isArray(moveItem) ? moveItem : (moveItem ? [moveItem] : [])}
         onSubmit={handleMoveSubmit}
       />
 

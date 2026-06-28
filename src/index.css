@@ -843,20 +843,43 @@ body {
   margin-bottom: 6px;
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--muted-text);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .form-input {
   width: 100%;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   color: var(--primary-text);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 0.9rem;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
   outline: none;
   transition: var(--transition-smooth);
 }
 
+.input-wrapper .form-input {
+  padding-left: 44px;
+}
+
 .form-input:focus {
   border-color: var(--primary);
+  background-color: var(--bg-hover);
+  box-shadow: 0 0 0 3px rgba(168, 199, 250, 0.15);
 }
 
 /* Buttons in Google Material 3 */
@@ -902,6 +925,64 @@ body {
 
 .btn-danger:hover {
   background: #ffdad6;
+}
+
+/* Login Screen Styles */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-primary);
+  padding: 20px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card:hover {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.login-header-icon {
+  color: var(--primary);
+  filter: drop-shadow(0 4px 12px rgba(168, 199, 250, 0.2));
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.login-title {
+  font-family: var(--font-title);
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--primary-text);
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  margin-bottom: 24px;
+}
+
+.recaptcha-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  width: 100%;
 }
 
 .login-alert {
@@ -1276,3 +1357,93 @@ body {
   overflow: hidden;
 }
 
+/* Helper Utilities (Bootstrap replacement) */
+.text-center {
+  text-align: center !important;
+}
+.mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.mt-4 {
+  margin-top: 1.5rem !important;
+}
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+.ms-2 {
+  margin-left: 0.5rem !important;
+}
+.w-full {
+  width: 100% !important;
+}
+.py-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+.fs-6 {
+  font-size: 1rem !important;
+}
+.small {
+  font-size: 0.875rem !important;
+}
+.text-muted {
+  color: var(--muted-text) !important;
+}
+.text-info {
+  color: var(--primary) !important;
+}
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+
+/* Animation Keyframes */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+/* Animation Utility Classes */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+/* Empty State / Loading Spinner Container */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 24px;
+  width: 100%;
+  min-height: 300px;
+  color: var(--muted-text);
+  text-align: center;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: var(--secondary-text);
+  margin: 0;
+}
+
+.empty-state-icon {
+  color: var(--muted-text);
+  opacity: 0.5;
+}
+
+.mt-3 {
+  margin-top: 0.75rem !important;
+}

@@ -48,7 +48,7 @@ export default function FileCard({ file, onPreview, isSelected, onSelect, onCont
   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(file.extensao?.toLowerCase());
 
   const handleCardClick = (e) => {
-    onSelect(file);
+    onSelect(file, e);
   };
 
   const handleCardDoubleClick = (e) => {

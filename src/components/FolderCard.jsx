@@ -12,7 +12,7 @@ export default function FolderCard({
   onFolderDrop 
 }) {
   const handleCardClick = (e) => {
-    onSelect(folder);
+    onSelect(folder, e);
   };
 
   const handleCardDoubleClick = (e) => {
