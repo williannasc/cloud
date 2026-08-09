@@ -55,7 +55,9 @@ export default function FileManager({
   isUploadOpen,
   setIsUploadOpen,
   setStorageUsed,
-  setStorageUsedFormat
+  setStorageUsedFormat,
+  setStorageLimit,
+  setStorageLimitFormat
 }) {
   const [data, setData] = useState({
     nome_atual: 'Inicio',
@@ -159,6 +161,12 @@ export default function FileManager({
       setData(res);
       setStorageUsed(res.tamanho_total_usado || 0);
       setStorageUsedFormat(res.tamanho_total_usado_formatado || '0 bytes');
+      if (setStorageLimit && res.limite_total) {
+        setStorageLimit(res.limite_total);
+      }
+      if (setStorageLimitFormat && res.limite_total_formatado) {
+        setStorageLimitFormat(res.limite_total_formatado);
+      }
       setSelectedItems([]);
     } else {
       alert(res.message || 'Erro ao carregar arquivos.');

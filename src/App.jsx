@@ -18,6 +18,8 @@ export default function App() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [storageUsed, setStorageUsed] = useState(0);
   const [storageUsedFormat, setStorageUsedFormat] = useState('0 bytes');
+  const [storageLimit, setStorageLimit] = useState(15 * 1024 * 1024 * 1024);
+  const [storageLimitFormat, setStorageLimitFormat] = useState('15 GB');
 
   // Verifica se o usuário já possui sessão ativa ao carregar o app
   const checkAuthStatus = async () => {
@@ -94,6 +96,8 @@ export default function App() {
         onOpenFolderUpload={() => window.dispatchEvent(new CustomEvent('triggerFolderUpload'))}
         storageUsed={storageUsed}
         storageUsedFormat={storageUsedFormat}
+        storageLimit={storageLimit}
+        storageLimitFormat={storageLimitFormat}
       />
 
       {/* Área principal baseada na aba ativa */}
@@ -109,6 +113,8 @@ export default function App() {
           setIsUploadOpen={setIsUploadOpen}
           setStorageUsed={setStorageUsed}
           setStorageUsedFormat={setStorageUsedFormat}
+          setStorageLimit={setStorageLimit}
+          setStorageLimitFormat={setStorageLimitFormat}
         />
       )}
     </div>

@@ -26,7 +26,9 @@ export default function Sidebar({
   onOpenUploadModal,
   onOpenFolderUpload,
   storageUsed,
-  storageUsedFormat
+  storageUsedFormat,
+  storageLimit,
+  storageLimitFormat
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -42,9 +44,8 @@ export default function Sidebar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Google Drive free tier: 15 GB
-  const FREE_TIER_LIMIT = 15 * 1024 * 1024 * 1024; // 15 GB em bytes
-  const percentage = Math.min((storageUsed / FREE_TIER_LIMIT) * 100, 100);
+  // Dynamic storage limit based on disk space
+  const percentage = Math.min((storageUsed / (storageLimit || 1)) * 100, 100);
 
   return (
     <aside className={`sidebar ${isOpen ? 'active' : ''}`}>
@@ -160,7 +161,7 @@ export default function Sidebar({
           <div className="storage-bar-fill" style={{ width: `${percentage}%` }}></div>
         </div>
         <div className="storage-text">
-          {storageUsedFormat} de 15 GB usados
+          {storageUsedFormat} de {storageLimitFormat || '15 GB'} usados
         </div>
       </div>
     </aside>

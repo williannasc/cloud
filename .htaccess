@@ -1,15 +1,15 @@
-# Aumentar limites de upload no Apache (mod_php)
+# Aumentar limites de upload no Apache (mod_php) para 5GB
 <IfModule mod_php7.c>
-    php_value upload_max_filesize 512M
-    php_value post_max_size 512M
-    php_value memory_limit 512M
-    php_value max_execution_time 300
-    php_value max_input_time 300
+    php_value upload_max_filesize 5G
+    php_value post_max_size 5G
+    php_value memory_limit 1024M
+    php_value max_execution_time 7200
+    php_value max_input_time 7200
 </IfModule>
 <IfModule mod_php.c>
-    php_value upload_max_filesize 512M
-    php_value post_max_size 512M
-    php_value memory_limit 512M
-    php_value max_execution_time 300
-    php_value max_input_time 300
+    php_value upload_max_filesize 5G
+    php_value post_max_size 5G
+    php_value memory_limit 1024M
+    php_value max_execution_time 7200
+    php_value max_input_time 7200
 </IfModule>

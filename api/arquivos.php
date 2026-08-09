@@ -85,6 +85,12 @@ try {
         }
     }
 
+    $free_space = @disk_free_space(UPLOAD_DIR);
+    if ($free_space === false) {
+        $free_space = 15 * 1024 * 1024 * 1024; // Fallback 15GB
+    }
+    $limite_total = $tamanho_total_usado + $free_space;
+
     echo json_encode([
         'status' => 'success',
         'pai_id' => $pai_id,
@@ -94,7 +100,9 @@ try {
         'pastas' => $pastas,
         'arquivos' => $arquivos,
         'tamanho_total_usado' => $tamanho_total_usado,
-        'tamanho_total_usado_formatado' => formatarTamanho($tamanho_total_usado)
+        'tamanho_total_usado_formatado' => formatarTamanho($tamanho_total_usado),
+        'limite_total' => $limite_total,
+        'limite_total_formatado' => formatarTamanho($limite_total)
     ]);
 
 } catch (PDOException $e) {
